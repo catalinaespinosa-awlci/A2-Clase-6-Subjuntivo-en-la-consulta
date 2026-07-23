@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El subjuntivo en la consulta · Español Médico · Clase 6</title>
+<style>
+:root {
+  --grafito:#36454F; --grafito2:#2E3438; --ambar:#E8A33D; --mostaza:#F7EED9;
+  --teal:#1F776C; --teal-d:#155C53; --teal-s:#E3EFEA;
+  --verde:#4C956C; --rojo:#C0392B; --terra:#BC6C25;
+  --card:#FFFFFF; --line:#E7DCC2; --muted:#7C878E;
+  --sh:0 4px 18px rgba(54,69,79,.10);
+  --sh-lg:0 10px 34px rgba(54,69,79,.14);
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body {
+  font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+  background:var(--mostaza); color:var(--grafito2); line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap { max-width:1000px; margin:0 auto; padding:0 20px 70px; }
+
+/* ---------- Header ---------- */
+header {
+  background:linear-gradient(135deg,var(--grafito) 0%,var(--grafito2) 100%);
+  color:#fff; padding:36px 0 28px; position:relative; overflow:hidden;
+}
+header:after {
+  content:""; position:absolute; right:-70px; bottom:-90px; width:260px; height:260px;
+  border-radius:50%; background:rgba(232,163,61,.10);
+}
+header .wrap { padding-bottom:0; position:relative; z-index:2; }
+.eyebrow { font-size:.72rem; letter-spacing:.22em; font-weight:700; color:var(--ambar); text-transform:uppercase; }
+h1 { font-family:Cambria,Georgia,serif; font-size:2.5rem; font-weight:700; margin:5px 0 4px; letter-spacing:-.01em; }
+h1 em { font-style:normal; color:var(--ambar); }
+.hsub { color:#D3D8DA; font-size:1rem; max-width:700px; }
+.hstats { display:flex; gap:26px; margin-top:18px; flex-wrap:wrap; }
+.stat b { display:block; font-family:Cambria,serif; font-size:1.5rem; color:var(--ambar); line-height:1.1; }
+.stat span { font-size:.76rem; letter-spacing:.09em; text-transform:uppercase; color:#AAB2B6; }
+
+/* ---------- Tabs ---------- */
+.tabs {
+  position:sticky; top:0; z-index:30; background:var(--mostaza);
+  display:flex; gap:6px; flex-wrap:wrap; padding:14px 0 12px;
+  border-bottom:1px solid var(--line);
+}
+.tab {
+  border:none; background:#fff; color:var(--grafito); font-weight:600; font-size:.87rem;
+  padding:9px 14px; border-radius:9px; cursor:pointer; box-shadow:var(--sh);
+  display:flex; align-items:center; gap:8px; transition:.16s; font-family:inherit;
+}
+.tab:hover { transform:translateY(-1px); }
+.tab.active { background:var(--teal); color:#fff; }
+.tab .lv {
+  font-size:.62rem; font-weight:800; letter-spacing:.06em; padding:2px 5px; border-radius:4px;
+  background:var(--mostaza); color:var(--grafito); line-height:1.4;
+}
+.tab.active .lv { background:rgba(255,255,255,.22); color:#fff; }
+.tab .dot { width:7px; height:7px; border-radius:50%; background:var(--line); }
+.tab .dot.done { background:var(--verde); }
+.tab.ref { margin-left:auto; }
+
+/* ---------- Panels ---------- */
+.panel { display:none; padding-top:24px; }
+.panel.active { display:block; animation:fade .26s ease; }
+@keyframes fade { from{opacity:0;transform:translateY(7px)} to{opacity:1;transform:none} }
+
+.bhead { margin-bottom:18px; }
+.bhead .lvl {
+  display:inline-block; font-size:.66rem; font-weight:800; letter-spacing:.12em;
+  background:var(--grafito2); color:#fff; padding:3px 8px; border-radius:5px; margin-bottom:8px;
+}
+.bhead h2 { font-family:Cambria,serif; font-size:1.72rem; color:var(--grafito2); line-height:1.25; }
+.bhead .bsub { color:var(--terra); font-size:.9rem; font-weight:600; margin-top:2px; }
+.meta { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:16px 0 22px; }
+.meta-box { background:#fff; border-radius:11px; padding:14px 16px; box-shadow:var(--sh); border-left:3px solid var(--teal); }
+.meta-box.i { border-left-color:var(--ambar); }
+.meta-box b { display:block; font-size:.68rem; letter-spacing:.13em; text-transform:uppercase; color:var(--muted); margin-bottom:4px; }
+.meta-box p { font-size:.9rem; }
+
+/* ---------- Items ---------- */
+.item {
+  background:#fff; border-radius:13px; padding:18px 20px; box-shadow:var(--sh);
+  margin-bottom:12px; position:relative; border-left:3px solid transparent; transition:.18s;
+}
+.item.ok { border-left-color:var(--verde); }
+.item.no { border-left-color:var(--rojo); }
+.item-n {
+  position:absolute; left:-13px; top:16px; width:26px; height:26px; border-radius:50%;
+  background:var(--teal); color:#fff; font-size:.78rem; font-weight:700;
+  display:flex; align-items:center; justify-content:center; box-shadow:var(--sh);
+}
+.caso-tag {
+  display:inline-block; font-size:.66rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--teal); background:var(--teal-s); padding:3px 9px; border-radius:5px; margin-bottom:9px;
+}
+.sent { font-size:1.02rem; }
+.blank { display:inline-flex; flex-direction:column; align-items:center; vertical-align:baseline; margin:0 3px; }
+.blank input {
+  font-family:inherit; font-size:1rem; font-weight:700; color:var(--teal-d);
+  text-align:center; border:none; border-bottom:2px solid var(--ambar); background:#FFFDF7;
+  padding:2px 6px; width:9.5em; border-radius:4px 4px 0 0; transition:.15s;
+}
+.blank input:focus { outline:none; border-bottom-color:var(--teal); background:var(--teal-s); }
+.blank input.ok { border-bottom-color:var(--verde); background:#EAF3EE; color:var(--verde); }
+.blank input.no { border-bottom-color:var(--rojo); background:#FBEAE8; color:var(--rojo); text-decoration:line-through; }
+.vhint {
+  font-size:.7rem; font-weight:700; color:var(--terra); letter-spacing:.04em;
+  margin-top:2px; text-transform:lowercase;
+}
+.sol { display:none; font-weight:700; color:var(--verde); margin-left:4px; }
+.sol.show { display:inline; }
+
+.why {
+  display:none; margin-top:12px; padding:11px 14px; background:var(--mostaza);
+  border-radius:9px; border-left:3px solid var(--ambar); font-size:.85rem;
+}
+.why.show { display:block; }
+.why .wl { font-size:.66rem; font-weight:800; letter-spacing:.12em; text-transform:uppercase; color:var(--terra); }
+.why .trig { font-weight:700; color:var(--grafito2); }
+.why p { color:var(--grafito); margin-top:2px; }
+.why .row + .row { margin-top:8px; padding-top:8px; border-top:1px dashed var(--line); }
+
+/* ---------- Propio ---------- */
+.propio textarea {
+  width:100%; min-height:110px; border:1.5px dashed var(--line); border-radius:11px;
+  padding:13px 15px; font-family:inherit; font-size:.98rem; color:var(--grafito2);
+  background:#FFFDF7; resize:vertical; line-height:1.6;
+}
+.propio textarea:focus { outline:none; border-color:var(--teal); border-style:solid; background:#fff; }
+.propio .prompt { font-size:.9rem; color:var(--grafito); margin-bottom:11px; }
+.modelo {
+  display:none; margin-top:12px; background:var(--teal-s); border-radius:9px; padding:12px 15px;
+  font-size:.88rem; border-left:3px solid var(--teal);
+}
+.modelo.show { display:block; }
+.modelo b { font-size:.66rem; letter-spacing:.12em; text-transform:uppercase; color:var(--teal-d); }
+.modelo p { font-style:italic; margin-top:3px; }
+.wc { font-size:.75rem; color:var(--muted); margin-top:6px; text-align:right; }
+
+/* ---------- Actions ---------- */
+.actions { display:flex; gap:9px; flex-wrap:wrap; margin:22px 0 8px; align-items:center; }
+.btn {
+  border:none; border-radius:10px; padding:11px 19px; font-size:.9rem; font-weight:700;
+  cursor:pointer; transition:.15s; background:#fff; color:var(--grafito2);
+  box-shadow:var(--sh); font-family:inherit;
+}
+.btn:hover { transform:translateY(-1px); }
+.btn.primary { background:var(--teal); color:#fff; }
+.btn.amber { background:var(--ambar); color:var(--grafito2); }
+.btn.ghost { background:transparent; box-shadow:none; color:var(--muted); text-decoration:underline; }
+.scorebox {
+  margin-left:auto; font-weight:700; color:var(--teal-d); background:var(--teal-s);
+  padding:8px 15px; border-radius:9px; font-size:.9rem; opacity:0; transition:.2s;
+}
+.scorebox.show { opacity:1; }
+
+/* ---------- Reference ---------- */
+.ref-sec { margin-bottom:30px; }
+.ref-sec > h3 {
+  font-family:Cambria,serif; font-size:1.28rem; margin-bottom:12px; color:var(--grafito2);
+  display:flex; align-items:center; gap:9px;
+}
+.ref-sec > h3:before { content:""; width:4px; height:20px; background:var(--ambar); border-radius:3px; }
+.rules { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:10px; }
+.rule { background:#fff; border-radius:11px; padding:14px 16px; box-shadow:var(--sh); border-top:3px solid var(--teal); }
+.rule-t { font-weight:700; font-size:.95rem; color:var(--grafito2); }
+.rule-d { font-size:.82rem; color:var(--terra); margin:4px 0 7px; font-weight:600; }
+.rule-e { font-size:.88rem; color:var(--grafito); font-style:italic; padding-top:7px; border-top:1px dashed var(--line); }
+.rule-e b { color:var(--teal-d); font-style:normal; }
+
+.ctr { background:#fff; border-radius:11px; padding:14px 16px; box-shadow:var(--sh); margin-bottom:10px; }
+.ctr-t { font-size:.68rem; font-weight:800; letter-spacing:.11em; text-transform:uppercase; color:var(--muted); margin-bottom:8px; }
+.ctr-pair { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.ctr-a, .ctr-b { padding:9px 12px; border-radius:8px; font-size:.9rem; }
+.ctr-a { background:#F1F4F5; border-left:3px solid var(--muted); }
+.ctr-b { background:var(--teal-s); border-left:3px solid var(--teal); }
+.ctr-a b { color:var(--grafito2); } .ctr-b b { color:var(--teal-d); }
+.ctr-n { font-size:.8rem; color:var(--muted); margin-top:8px; }
+
+table.cj { width:100%; border-collapse:collapse; background:#fff; border-radius:11px; overflow:hidden; box-shadow:var(--sh); }
+table.cj th, table.cj td { padding:10px 13px; text-align:left; font-size:.85rem; border-bottom:1px solid var(--line); }
+table.cj thead th { background:var(--grafito2); color:#fff; font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; }
+table.cj tbody th { font-weight:700; color:var(--terra); white-space:nowrap; }
+table.cj tbody tr:last-child th, table.cj tbody tr:last-child td { border-bottom:none; }
+table.cj tbody tr:nth-child(even) { background:#FCF9F0; }
+.orto { margin-top:12px; background:var(--mostaza); border-left:3px solid var(--ambar); border-radius:9px; padding:12px 15px; font-size:.86rem; }
+.orto b { color:var(--terra); }
+
+footer { text-align:center; color:var(--muted); font-size:.8rem; margin-top:44px; padding-top:20px; border-top:1px solid var(--line); }
+
+@media (max-width:640px) {
+  h1 { font-size:1.9rem; } .meta, .ctr-pair { grid-template-columns:1fr; }
+  .tab.ref { margin-left:0; } .item-n { left:auto; right:14px; top:-11px; }
+  .blank input { width:8em; }
+}
+@media print {
+  .tabs, .actions, .btn, header:after { display:none !important; }
+  .panel { display:block !important; page-break-after:always; }
+  body { background:#fff; } .item { box-shadow:none; border:1px solid #ddd; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="eyebrow">Español Médico · Clase 6 · Gramática</div>
+    <h1>El subjuntivo <em>en la consulta</em></h1>
+    <div class="hsub">Cinco bloques de práctica clínica: salud mental, oftalmología, terapia del habla, medicina general y enfermería.</div>
+    <div class="hstats">
+      <div class="stat"><b>5</b><span>Bloques</span></div>
+      <div class="stat"><b id="hTotal">0</b><span>Huecos</span></div>
+      <div class="stat"><b>A1·A2</b><span>Niveles</span></div>
+      <div class="stat"><b>60′</b><span>Duración</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="tabs" id="tabs"></div>
+  <div id="panels"></div>
+
+  <!-- REFERENCIA -->
+  <section class="panel" id="p-ref">
+    <div class="bhead">
+      <span class="lvl">Referencia</span>
+      <h2>Guía rápida del subjuntivo</h2>
+      <div class="bsub">Detonantes · contrastes · conjugación</div>
+    </div>
+
+    <div class="ref-sec">
+      <h3>¿Qué activa el subjuntivo?</h3>
+      <div class="rules"><div class="rule"><div class="rule-t">Deseo y esperanza</div><div class="rule-d">esperar que · desear que · querer que · ojalá (que)</div><div class="rule-e">Espero que la terapia le <b>ayude</b>.</div></div><div class="rule"><div class="rule-t">Influencia: consejo, petición, orden</div><div class="rule-d">recomendar que · aconsejar que · pedir que · sugerir que · proponer que · insistir en que</div><div class="rule-e">Le recomiendo que <b>vuelva</b> en una semana.</div></div><div class="rule"><div class="rule-t">Valoración impersonal</div><div class="rule-d">es importante / fundamental / necesario / imprescindible / urgente que</div><div class="rule-e">Es importante que <b>controle</b> su presión arterial.</div></div><div class="rule"><div class="rule-t">Finalidad</div><div class="rule-d">para que · a fin de que · de modo que (finalidad)</div><div class="rule-e">Trabajamos para que <b>recupere</b> el habla.</div></div><div class="rule"><div class="rule-t">Duda y negación de la certeza</div><div class="rule-d">dudar que · no creer que · no considerar que · no es cierto que</div><div class="rule-e">No creo que <b>sea</b> grave.</div></div><div class="rule"><div class="rule-t">Probabilidad</div><div class="rule-d">es probable / posible que · puede que · quizá · tal vez</div><div class="rule-e">No es probable que se <b>trate</b> de algo muscular.</div></div><div class="rule"><div class="rule-t">Concesión hipotética</div><div class="rule-d">aunque · a pesar de que (información no experimentada)</div><div class="rule-e">Tome el tratamiento aunque se <b>sienta</b> mejor.</div></div><div class="rule"><div class="rule-t">Emoción</div><div class="rule-d">me alegro de que · siento que · temo que · me preocupa que</div><div class="rule-e">Me preocupa que <b>abandone</b> el tratamiento.</div></div><div class="rule"><div class="rule-t">Tiempo futuro</div><div class="rule-d">cuando · hasta que · en cuanto · mientras · después de que</div><div class="rule-e">Avíseme cuando <b>note</b> los primeros síntomas.</div></div><div class="rule"><div class="rule-t">Anterioridad absoluta</div><div class="rule-d">antes de que (siempre subjuntivo, sin excepción)</div><div class="rule-e">Hágase la placa antes de que <b>empiece</b> el tratamiento.</div></div><div class="rule"><div class="rule-t">Antecedente indefinido</div><div class="rule-d">buscar / necesitar / querer + un(a)… que</div><div class="rule-e">Buscaba un enfoque que se <b>adaptara</b> al paciente.</div></div></div>
+    </div>
+
+    <div class="ref-sec">
+      <h3>Indicativo o subjuntivo: los casos que confunden</h3>
+      <div class="ctr"><div class="ctr-t">Certeza → INDICATIVO</div><div class="ctr-pair"><div class="ctr-a">No dudo de que me <b>receta</b> lo adecuado.</div><div class="ctr-b">Dudo que me <b>recete</b> lo adecuado.</div></div><div class="ctr-n">Negar la duda afirma; dudar exige subjuntivo.</div></div><div class="ctr"><div class="ctr-t">Opinión afirmativa → INDICATIVO</div><div class="ctr-pair"><div class="ctr-a">Considero que me <b>permite</b> avanzar.</div><div class="ctr-b">No considero que me <b>permita</b> avanzar.</div></div><div class="ctr-n">La negación de la opinión abre el subjuntivo.</div></div><div class="ctr"><div class="ctr-t">Presente → PRESENTE DE SUBJ.</div><div class="ctr-pair"><div class="ctr-a">Es importante que <b>venga</b> pronto.</div><div class="ctr-b">Era importante que <b>viniera</b> pronto.</div></div><div class="ctr-n">La principal en pasado arrastra el imperfecto.</div></div><div class="ctr"><div class="ctr-t">Hecho real → INDICATIVO</div><div class="ctr-pair"><div class="ctr-a">Aunque se <b>siente</b> mejor, sigue el tratamiento.</div><div class="ctr-b">Aunque se <b>sienta</b> mejor, siga el tratamiento.</div></div><div class="ctr-n">Real y constatado vs. hipotético.</div></div><div class="ctr"><div class="ctr-t">Tiempo pasado → INDICATIVO</div><div class="ctr-pair"><div class="ctr-a">Fumó hasta que <b>enfermó</b>.</div><div class="ctr-b">No fume hasta que <b>supere</b> las primeras semanas.</div></div><div class="ctr-n">«Cuando / hasta que / en cuanto»: pasado o hábito → indicativo; futuro → subjuntivo.</div></div><div class="ctr"><div class="ctr-t">Antecedente conocido → INDICATIVO</div><div class="ctr-pair"><div class="ctr-a">Tengo un tratamiento que <b>funciona</b>.</div><div class="ctr-b">Busco un tratamiento que <b>funcione</b>.</div></div><div class="ctr-n">Si el antecedente existe y se identifica, indicativo; si se desconoce, subjuntivo.</div></div><div class="ctr"><div class="ctr-t">Afirmar → INDICATIVO</div><div class="ctr-pair"><div class="ctr-a">Insiste en que la glucemia <b>está</b> alta.</div><div class="ctr-b">Insiste en que <b>controle</b> la glucemia.</div></div><div class="ctr-n">«Insistir en que»: informar → indicativo; influir → subjuntivo.</div></div>
+    </div>
+
+    <div class="ref-sec">
+      <h3>Conjugación de referencia</h3>
+      <table class="cj">
+        <thead><tr><th>Verbo</th><th>Presente de subjuntivo</th><th>Imperfecto de subjuntivo (‑ra / ‑se)</th></tr></thead>
+        <tbody><tr><th>descansar (‑ar)</th><td>descanse · descanses · descanse · descansemos · descanséis · descansen</td><td>descansara / descansase · descansaras…</td></tr><tr><th>beber (‑er)</th><td>beba · bebas · beba · bebamos · bebáis · beban</td><td>bebiera / bebiese · bebieras…</td></tr><tr><th>asistir (‑ir)</th><td>asista · asistas · asista · asistamos · asistáis · asistan</td><td>asistiera / asistiese · asistieras…</td></tr><tr><th>tener → teng‑</th><td>tenga · tengas · tenga · tengamos · tengáis · tengan</td><td>tuviera / tuviese · tuvieras…</td></tr><tr><th>hacer → hag‑</th><td>haga · hagas · haga · hagamos · hagáis · hagan</td><td>hiciera / hiciese · hicieras…</td></tr><tr><th>venir → veng‑</th><td>venga · vengas · venga · vengamos · vengáis · vengan</td><td>viniera / viniese · vinieras…</td></tr><tr><th>seguir → sig‑ (e→i)</th><td>siga · sigas · siga · sigamos · sigáis · sigan</td><td>siguiera / siguiese · siguieras…</td></tr><tr><th>poder → pued‑ (o→ue)</th><td>pueda · puedas · pueda · podamos · podáis · puedan</td><td>pudiera / pudiese · pudieras…</td></tr><tr><th>sentir(se) → sient‑ (e→ie)</th><td>sienta · sientas · sienta · sintamos · sintáis · sientan</td><td>sintiera / sintiese · sintieras…</td></tr><tr><th>estar</th><td>esté · estés · esté · estemos · estéis · estén</td><td>estuviera / estuviese · estuvieras…</td></tr><tr><th>haber (impersonal)</th><td>haya</td><td>hubiera / hubiese</td></tr><tr><th>reducir → reduzc‑</th><td>reduzca · reduzcas · reduzca · reduzcamos · reduzcáis · reduzcan</td><td>redujera / redujese · redujeras…</td></tr><tr><th>dar</th><td>dé · des · dé · demos · deis · den</td><td>diera / diese · dieras…</td></tr><tr><th>ser</th><td>sea · seas · sea · seamos · seáis · sean</td><td>fuera / fuese · fueras…</td></tr><tr><th>conocer → conozc‑</th><td>conozca · conozcas · conozca · conozcamos · conozcáis · conozcan</td><td>conociera / conociese · conocieras…</td></tr><tr><th>empezar → empiec‑ (e→ie)</th><td>empiece · empieces · empiece · empecemos · empecéis · empiecen</td><td>empezara / empezase · empezaras…</td></tr></tbody>
+      </table>
+      <div class="orto">Cambios ortográficos: ‑car → qu (explicar → expli<b>qu</b>e) · ‑gar → gu (llegar → lle<b>gu</b>e) · ‑zar → c (desestigmatizar → desestigmati<b>c</b>en).</div>
+    </div>
+  </section>
+
+  <footer>© Catalina Espinosa · Español Médico · Clase 6 · El subjuntivo en la consulta</footer>
+</div>
+
+<script>
+const B = [{"id": "repaso", "lvl": "A1", "icon": "✎", "tab": "Repaso general", "titulo": "Repaso general del subjuntivo", "sub": "Salud mental · presente e imperfecto de subjuntivo", "obj": "Practicar el uso del subjuntivo (presente e imperfecto) en situaciones relacionadas con la salud mental.", "instr": "Lea atentamente cada oración y conjugue el verbo en la forma correcta de subjuntivo (presente o imperfecto) según el contexto.", "tipo": "frases", "items": [{"seg": ["Es importante que el psicólogo me ", "|", " con atención durante las sesiones de terapia."], "h": [{"v": "escuchar", "a": ["escuche"], "t": "Es importante que…", "n": "Expresión impersonal de valoración + que → presente de subjuntivo."}]}, {"seg": ["Espero que la terapia me ", "|", " a superar mi ansiedad y a mejorar mi calidad de vida."], "h": [{"v": "ayudar", "a": ["ayude"], "t": "Espero que…", "n": "Verbo de deseo (esperar) + que con sujeto distinto → subjuntivo."}]}, {"seg": ["No dudo de que el psiquiatra me ", "|", " el medicamento adecuado para tratar mi depresión."], "h": [{"v": "recetar", "a": ["receta", "recete"], "t": "No dudo de que… (¡ojo!)", "n": "TRAMPA: «no dudar de que» afirma certeza → indicativo: «receta». La forma «recete» también se documenta en uso culto, por eso se acepta. El subjuntivo es obligatorio al negar la certeza: «Dudo que me recete…»."}]}, {"seg": ["Sería muy beneficioso que mi familia y mis amigos me ", "|", " en este proceso de recuperación."], "h": [{"v": "apoyar", "a": ["apoyaran", "apoyasen"], "t": "Sería beneficioso que…", "n": "El condicional en la principal exige imperfecto de subjuntivo: «apoyaran» / «apoyasen»."}]}, {"seg": ["Es fundamental que los profesionales de la salud mental ", "|", " capacitados para atender adecuadamente los diferentes trastornos mentales."], "h": [{"v": "estar", "a": ["estén"], "t": "Es fundamental que…", "n": "Verbo irregular: esté, estés, esté, estemos, estéis, estén."}]}, {"seg": ["Considero que la terapia grupal me ", "|", " compartir mis experiencias con otras personas que están pasando por situaciones similares."], "h": [{"v": "permitir", "a": ["permite", "permita"], "t": "Considero que… (¡ojo!)", "n": "TRAMPA: «considerar que» en afirmativa expresa opinión asertiva → indicativo: «permite». En negativa sí exige subjuntivo: «No considero que me permita…»."}]}, {"seg": ["Espero que las nuevas investigaciones sobre el cerebro ", "|", " a comprender mejor las causas de las enfermedades mentales."], "h": [{"v": "ayudar", "a": ["ayuden"], "t": "Espero que…", "n": "Sujeto plural (las investigaciones) → 3.ª persona del plural: ayuden."}]}, {"seg": ["Es importante que se ", "|", " las enfermedades mentales para que las personas que las padecen no tengan miedo de buscar ayuda."], "h": [{"v": "desestigmatizar", "a": ["desestigmaticen"], "t": "Es importante que… + se pasiva refleja", "n": "Pasiva refleja con sujeto plural («las enfermedades») → desestigmaticen. Verbo en ‑zar: c ante e."}]}, {"seg": ["Ojalá que en el futuro ", "|", " más recursos disponibles para la atención de la salud mental."], "h": [{"v": "haber", "a": ["haya"], "t": "Ojalá que…", "n": "«Haber» impersonal siempre en singular: haya más recursos."}]}, {"seg": ["Es fundamental que todos ", "|", " acceso a un tratamiento de calidad para la salud mental, independientemente de su condición socioeconómica."], "h": [{"v": "tener", "a": ["tengan"], "t": "Es fundamental que…", "n": "Irregular con ‑g‑: tenga, tengas, tenga, tengamos, tengáis, tengan."}]}, {"seg": ["Le sugiero que ", "|", " con un profesional antes de que los síntomas ", "|", "."], "h": [{"v": "hablar", "a": ["hable"], "t": "Le sugiero que…", "n": "Verbo de influencia (sugerir) + que → presente de subjuntivo."}, {"v": "empeorar", "a": ["empeoren"], "t": "antes de que…", "n": "«Antes de que» exige SIEMPRE subjuntivo, sin excepción."}]}, {"seg": ["Me alegro de que ", "|", " decidido pedir ayuda; es un paso muy valiente."], "h": [{"v": "haber", "a": ["haya"], "t": "Me alegro de que…", "n": "Verbo de emoción + que → subjuntivo. Aquí «haya decidido» es pretérito perfecto de subjuntivo."}]}, {"seg": ["No creo que la medicación por sí sola ", "|", " suficiente; es necesario que se ", "|", " con psicoterapia."], "h": [{"v": "ser", "a": ["sea"], "t": "No creo que…", "n": "La negación de la creencia abre el subjuntivo. Compare: «Creo que es suficiente» (indicativo)."}, {"v": "combinar", "a": ["combine"], "t": "es necesario que…", "n": "Valoración impersonal + pasiva refleja: se combine (sujeto singular: la medicación)."}]}, {"seg": ["Aunque se ", "|", " mejor, es importante que no ", "|", " el tratamiento por su cuenta."], "h": [{"v": "sentirse", "a": ["sienta", "se sienta"], "t": "Aunque… (hipótesis)", "n": "«Aunque» + subjuntivo presenta el hecho como hipotético o poco relevante. Irregular e→ie."}, {"v": "abandonar", "a": ["abandone"], "t": "es importante que…", "n": "Valoración impersonal → subjuntivo, también en frases negativas."}]}, {"seg": ["Temo que el paciente ", "|", " la terapia si no percibe mejoría pronto."], "h": [{"v": "dejar", "a": ["deje"], "t": "Temo que…", "n": "Verbo de emoción/temor + que → subjuntivo."}]}, {"seg": ["Cuando ", "|", " los primeros signos de una crisis de ansiedad, respire despacio y busque un lugar tranquilo."], "h": [{"v": "notar", "a": ["note"], "t": "Cuando… (futuro)", "n": "«Cuando» referido al futuro exige subjuntivo. Referido al pasado o al hábito, indicativo: «Cuando notaba ansiedad…»."}]}, {"seg": ["Ojalá que las listas de espera en salud mental se ", "|", " el año que viene."], "h": [{"v": "reducir", "a": ["reduzcan"], "t": "Ojalá que…", "n": "Irregular con ‑zc‑: reduzcan. Pasiva refleja con sujeto plural."}]}, {"seg": ["El equipo buscaba un enfoque terapéutico que se ", "|", " a las necesidades reales del paciente."], "h": [{"v": "adaptar", "a": ["adaptara", "adaptase"], "t": "un enfoque que… (antecedente indefinido)", "n": "Antecedente no identificado («un enfoque», no «el enfoque») + principal en pasado → imperfecto de subjuntivo."}]}, {"seg": ["La psicóloga nos pidió que ", "|", " la confidencialidad de todo lo que se hablara en la sesión."], "h": [{"v": "mantener", "a": ["mantuviéramos", "mantuviésemos"], "t": "nos pidió que… (pasado)", "n": "Petición en pasado → imperfecto de subjuntivo: mantuviéramos / mantuviésemos."}]}, {"seg": ["Es necesario que la familia ", "|", " en el plan de cuidados y que ", "|", " las señales de alarma."], "h": [{"v": "participar", "a": ["participe"], "t": "Es necesario que…", "n": "Valoración impersonal → subjuntivo. Sujeto singular: la familia."}, {"v": "conocer", "a": ["conozca"], "t": "y que… (mismo detonante)", "n": "Irregular con ‑zc‑: conozca."}]}]}, {"id": "oftalmo", "lvl": "A1", "icon": "◉", "tab": "Oftalmología", "titulo": "El subjuntivo en la consulta de oftalmología", "sub": "Casos clínicos · consejo y recomendación al paciente", "obj": "Practicar el subjuntivo en situaciones de su especialidad y reflexionar sobre la importancia de usarlo correctamente al comunicarse con sus pacientes.", "instr": "Lea cada caso de oftalmología y complete la oración conjugando el verbo en la forma correcta de subjuntivo (presente o imperfecto) según el contexto. Al final, añada su propio caso basándose en su experiencia.", "tipo": "casos", "items": [{"c": "Caso 1", "seg": ["Un paciente consulta al oftalmólogo porque tiene molestias en los ojos y visión borrosa. El oftalmólogo le receta unas gotas para los ojos y le recomienda que ", "|", " en una semana para control."], "h": [{"v": "volver", "a": ["vuelva"], "t": "le recomienda que…", "n": "Verbo de influencia (recomendar) + que → subjuntivo. Irregular o→ue: vuelva."}]}, {"c": "Caso 2", "seg": ["Una niña de 5 años no ha desarrollado correctamente la visión binocular. El oftalmólogo recomienda que la niña ", "|", " un parche oclusivo en un ojo durante algunas horas al día para que se ", "|", " el desarrollo de la visión binocular."], "h": [{"v": "usar", "a": ["use"], "t": "recomienda que…", "n": "Verbo de influencia + que → presente de subjuntivo."}, {"v": "estimular", "a": ["estimule"], "t": "para que…", "n": "«Para que» (finalidad) exige siempre subjuntivo."}]}, {"c": "Caso 3", "seg": ["Un señor de 65 años tiene cataratas en ambos ojos. El oftalmólogo le explica al paciente que la única forma de tratar las cataratas es que ", "|", " a una cirugía. Un familiar del paciente le aconseja que ", "|", " un poco antes de operarse y que ", "|", " con otro oftalmólogo para obtener una segunda opinión."], "h": [{"v": "someterse", "a": ["se someta", "someta"], "t": "la única forma… es que…", "n": "Verbo pronominal: se someta. La estructura «es que + subjuntivo» expresa condición o requisito."}, {"v": "esperar", "a": ["espere"], "t": "le aconseja que…", "n": "Aconsejar + que → subjuntivo."}, {"v": "consultar", "a": ["consulte"], "t": "y que… (mismo detonante)", "n": "El detonante «le aconseja que» sigue rigiendo la segunda subordinada."}]}, {"c": "Caso 4", "seg": ["Una paciente diabética de 62 años presenta una retinopatía diabética incipiente. El oftalmólogo insiste en que ", "|", " su glucemia y en que ", "|", " a revisión del fondo de ojo cada año."], "h": [{"v": "controlar", "a": ["controle"], "t": "insiste en que…", "n": "«Insistir en que» con valor de influencia → subjuntivo. Con valor de afirmación sería indicativo: «Insiste en que la glucemia está alta»."}, {"v": "acudir", "a": ["acuda"], "t": "y en que… (mismo detonante)", "n": "Verbo en ‑ir regular: acuda, acudas, acuda…"}]}, {"c": "Caso 5", "seg": ["Un joven de 22 años sufre una conjuntivitis bacteriana. El médico le pide que no ", "|", " toallas ni almohadas y que se ", "|", " las manos con frecuencia para que la infección no se ", "|", " a sus convivientes."], "h": [{"v": "compartir", "a": ["comparta"], "t": "le pide que no…", "n": "Pedir + que → subjuntivo, también en negativa."}, {"v": "lavar", "a": ["lave"], "t": "y que… (mismo detonante)", "n": "Pronominal: se lave las manos."}, {"v": "contagiar", "a": ["contagie"], "t": "para que no…", "n": "«Para que» (finalidad) exige subjuntivo siempre, en afirmativa y en negativa."}]}, {"c": "Caso 6", "seg": ["Un paciente refiere destellos y moscas volantes desde ayer. Ante la sospecha de desprendimiento de retina, es urgente que ", "|", " valorado hoy mismo. El oftalmólogo hubiera preferido que ", "|", " en cuanto aparecieron los primeros síntomas."], "h": [{"v": "ser", "a": ["sea"], "t": "es urgente que…", "n": "Valoración impersonal de urgencia → presente de subjuntivo: sea valorado (pasiva)."}, {"v": "llamar", "a": ["llamara", "llamase"], "t": "hubiera preferido que… (pasado)", "n": "Condicional compuesto en la principal → imperfecto de subjuntivo: llamara / llamase."}]}, {"c": "Caso 7", "tipo": "propio", "prompt": "Escriba su propio caso de oftalmología usando al menos dos formas de subjuntivo. Sugerencias: glaucoma, desprendimiento de retina, conjuntivitis, retinopatía diabética, uso de lentes correctoras.", "modelo": "Una paciente de 58 años con glaucoma de ángulo abierto olvida las gotas hipotensoras. Es imprescindible que se aplique el colirio a la misma hora cada día y que acuda a revisión cada seis meses para que no progrese el daño del nervio óptico."}]}, {"id": "habla", "lvl": "A1", "icon": "◑", "tab": "Terapia del habla", "titulo": "El subjuntivo en la consulta de terapia del habla", "sub": "Casos clínicos · finalidad y recomendación", "obj": "Practicar el subjuntivo en situaciones de su especialidad y reflexionar sobre la importancia de usarlo correctamente al comunicarse con sus pacientes.", "instr": "Lea cada caso de terapia del habla y complete la oración conjugando el verbo en la forma correcta de subjuntivo (presente o imperfecto) según el contexto. Al final, añada su propio caso basándose en su experiencia.", "tipo": "casos", "items": [{"c": "Caso 1", "seg": ["Un niño de 3 años tiene dificultades para pronunciar algunos sonidos. La terapeuta del habla les recomienda a los padres que ", "|", " al niño a sesiones de terapia para que ", "|", " mejorar su articulación."], "h": [{"v": "llevar", "a": ["lleven"], "t": "les recomienda a los padres que…", "n": "Sujeto: los padres → 3.ª persona del plural: lleven."}, {"v": "poder", "a": ["pueda"], "t": "para que…", "n": "Finalidad + sujeto «el niño» → pueda (o→ue)."}]}, {"c": "Caso 2", "seg": ["Una mujer de 50 años ha sufrido un accidente cerebrovascular y tiene dificultades para hablar. La terapeuta del habla trabaja con la paciente para que ", "|", " su capacidad de comunicación y ", "|", " expresar sus necesidades de manera efectiva."], "h": [{"v": "recuperar", "a": ["recupere"], "t": "para que…", "n": "«Para que» siempre exige subjuntivo."}, {"v": "conseguir", "a": ["consiga"], "t": "y… (mismo detonante)", "n": "Irregular e→i: consiga. El detonante «para que» sigue vigente."}]}, {"c": "Caso 3", "seg": ["Un señor de 60 años ha comenzado a perder audición y tiene problemas para entender lo que le dicen los demás. El paciente espera que el terapeuta del habla le ", "|", " algunas estrategias para que ", "|", " su comprensión auditiva."], "h": [{"v": "explicar", "a": ["explique"], "t": "espera que…", "n": "Verbo de deseo + que con sujeto distinto → subjuntivo. Verbo en ‑car: qu ante e."}, {"v": "mejorar", "a": ["mejore"], "t": "para que…", "n": "Finalidad → subjuntivo. Sujeto: el paciente."}]}, {"c": "Caso 4", "seg": ["Un paciente con enfermedad de Parkinson presenta disartria y habla en voz muy baja. La terapeuta le recomienda que ", "|", " más despacio y que ", "|", " la articulación para que se le ", "|", " mejor."], "h": [{"v": "hablar", "a": ["hable"], "t": "le recomienda que…", "n": "Verbo de influencia + que → subjuntivo."}, {"v": "exagerar", "a": ["exagere"], "t": "y que… (mismo detonante)", "n": "Verbo regular en ‑ar: exagere."}, {"v": "entender", "a": ["entienda"], "t": "para que…", "n": "Finalidad + impersonal «se le entienda». Irregular e→ie."}]}, {"c": "Caso 5", "seg": ["Un adolescente tartamudea al leer en voz alta en clase y evita participar. Es importante que sus profesores no lo ", "|", " y que le ", "|", " el tiempo que necesite para terminar sus frases."], "h": [{"v": "interrumpir", "a": ["interrumpan"], "t": "Es importante que…", "n": "Valoración impersonal + sujeto plural (los profesores) → interrumpan."}, {"v": "dar", "a": ["den"], "t": "y que… (mismo detonante)", "n": "Irregular: dé, des, dé, demos, deis, den."}]}, {"c": "Caso 6", "seg": ["Una paciente de 78 años con disfagia se atraganta con los líquidos. La terapeuta sugiere que ", "|", " todas las bebidas y que ", "|", " sentada y sin distracciones. También era importante que la familia ", "|", " estas indicaciones desde el alta."], "h": [{"v": "espesar", "a": ["espese"], "t": "sugiere que…", "n": "Sugerir + que → presente de subjuntivo."}, {"v": "comer", "a": ["coma"], "t": "y que… (mismo detonante)", "n": "Verbo en ‑er: coma, comas, coma…"}, {"v": "conocer", "a": ["conociera", "conociese"], "t": "era importante que… (pasado)", "n": "Principal en pasado → imperfecto de subjuntivo: conociera / conociese."}]}, {"c": "Caso 7", "tipo": "propio", "prompt": "Escriba su propio caso de terapia del habla usando al menos dos formas de subjuntivo. Sugerencias: disfagia, tartamudez, afasia, disartria, implante coclear, retraso del lenguaje.", "modelo": "Un paciente con disfagia tras un ictus se atraganta con los líquidos. Le recomiendo que espese todas las bebidas y que coma sentado y sin distracciones para que disminuya el riesgo de aspiración."}]}, {"id": "general", "lvl": "A2", "icon": "✚", "tab": "Medicina General", "titulo": "El subjuntivo en la consulta de medicina general", "sub": "Casos clínicos · presente e imperfecto de subjuntivo", "obj": "Practicar el subjuntivo en situaciones de su especialidad y reflexionar sobre la importancia de usarlo correctamente al comunicarse con sus pacientes.", "instr": "Lea cada caso de medicina general y complete la oración conjugando el verbo en la forma correcta de subjuntivo (presente o imperfecto) según el contexto.", "tipo": "casos", "items": [{"c": "Caso 1", "seg": ["Un paciente acude a la consulta porque tiene fiebre, dolor de cabeza y malestar general. El médico le recomienda que ", "|", " en casa y que ", "|", " muchos líquidos."], "h": [{"v": "descansar", "a": ["descanse"], "t": "le recomienda que…", "n": "Verbo de influencia + que → presente de subjuntivo."}, {"v": "beber", "a": ["beba"], "t": "y que… (mismo detonante)", "n": "Verbo en ‑er: beba, bebas, beba…"}]}, {"c": "Caso 2", "seg": ["Una paciente presenta síntomas de infección urinaria. El médico le receta antibióticos y le pide que ", "|", " el tratamiento completo aunque se ", "|", " mejor antes de terminarlo."], "h": [{"v": "tomar", "a": ["tome"], "t": "le pide que…", "n": "Pedir + que → subjuntivo (petición)."}, {"v": "sentirse", "a": ["se sienta", "sienta"], "t": "aunque… (hecho no experimentado)", "n": "«Aunque» + subjuntivo cuando se presenta como hipótesis o información no relevante. Irregular e→ie: se sienta."}]}, {"c": "Caso 3", "seg": ["Un hombre de 50 años tiene hipertensión arterial. El médico le aconseja que ", "|", " el consumo de sal y que ", "|", " ejercicio regularmente. También es importante que ", "|", " su presión arterial en casa."], "h": [{"v": "reducir", "a": ["reduzca"], "t": "le aconseja que…", "n": "Irregular con ‑zc‑: reduzca."}, {"v": "hacer", "a": ["haga"], "t": "y que… (mismo detonante)", "n": "Irregular: haga, hagas, haga…"}, {"v": "controlar", "a": ["controle"], "t": "es importante que…", "n": "Expresión impersonal de valoración → subjuntivo."}]}, {"c": "Caso 5", "seg": ["Una paciente de 34 años consulta por tos persistente de tres semanas. El médico quiere que se ", "|", " una radiografía de tórax antes de que ", "|", " cualquier tratamiento."], "h": [{"v": "hacer", "a": ["haga"], "t": "quiere que…", "n": "Verbo de voluntad + que con sujeto distinto → subjuntivo: se haga."}, {"v": "empezar", "a": ["empiece"], "t": "antes de que…", "n": "«Antes de que» siempre subjuntivo. Irregular e→ie y ‑zar → c: empiece."}]}, {"c": "Caso 6", "seg": ["Un paciente fumador de 45 años quiere dejar el tabaco. El médico le propone que ", "|", " una fecha de abandono y que ", "|", " las situaciones de riesgo hasta que ", "|", " las primeras semanas."], "h": [{"v": "fijar", "a": ["fije"], "t": "le propone que…", "n": "Proponer + que → subjuntivo."}, {"v": "evitar", "a": ["evite"], "t": "y que… (mismo detonante)", "n": "Verbo regular en ‑ar: evite."}, {"v": "superar", "a": ["supere"], "t": "hasta que… (futuro)", "n": "«Hasta que» referido al futuro exige subjuntivo. Referido al pasado, indicativo: «Fumó hasta que enfermó»."}]}, {"c": "Caso 7", "seg": ["Un hombre de 58 años acude con dolor torácico opresivo que se irradia al brazo izquierdo. No es probable que se ", "|", " de una molestia muscular; es imprescindible que se le ", "|", " un electrocardiograma de inmediato."], "h": [{"v": "tratar", "a": ["trate"], "t": "No es probable que…", "n": "Expresiones de probabilidad («es probable que», «no es probable que») → subjuntivo: se trate."}, {"v": "realizar", "a": ["realice"], "t": "es imprescindible que…", "n": "Valoración impersonal + pasiva refleja. Verbo en ‑zar: c ante e."}]}, {"c": "Caso 8", "seg": ["Una paciente con colesterol elevado no modificó sus hábitos y en la analítica de control el LDL seguía alto. El médico le había pedido que ", "|", " las grasas saturadas y que ", "|", " treinta minutos al día."], "h": [{"v": "reducir", "a": ["redujera", "redujese"], "t": "le había pedido que… (pasado)", "n": "Petición en pluscuamperfecto → imperfecto de subjuntivo: redujera / redujese."}, {"v": "caminar", "a": ["caminara", "caminase"], "t": "y que… (mismo detonante)", "n": "Imperfecto de subjuntivo regular: caminara / caminase."}]}, {"c": "Caso 9", "tipo": "propio", "prompt": "Escriba su propio caso de medicina general usando al menos dos formas de subjuntivo, una en presente y otra en imperfecto. Sugerencias: diabetes tipo 2, migraña, lumbalgia, alergia estacional, adherencia terapéutica.", "modelo": "Un paciente de 47 años con diabetes tipo 2 acude con la glucemia descontrolada. Le recomiendo que se mida el azúcar antes de cada comida y que registre los valores en una libreta para que podamos ajustar la dosis. Hubiera preferido que acudiera a la revisión de hace seis meses."}]}, {"id": "enfermeria", "lvl": "A2", "icon": "✜", "tab": "Enfermería", "titulo": "El subjuntivo en la consulta de enfermería", "sub": "Casos clínicos · cuidados, educación al paciente y seguimiento", "obj": "Practicar el subjuntivo en situaciones de su especialidad y reflexionar sobre la importancia de usarlo correctamente al comunicarse con sus pacientes.", "instr": "Lea cada caso de enfermería y complete la oración conjugando el verbo en la forma correcta de subjuntivo (presente o imperfecto) según el contexto.", "tipo": "casos", "items": [{"c": "Caso 1", "seg": ["Un paciente ha sido dado de alta después de una cirugía. La enfermera le explica que es importante que ", "|", " el vendaje diariamente y que ", "|", " la herida limpia."], "h": [{"v": "cambiar", "a": ["cambie"], "t": "es importante que…", "n": "Expresión impersonal de valoración + que → subjuntivo."}, {"v": "mantener", "a": ["mantenga"], "t": "y que… (mismo detonante)", "n": "Como «tener», irregular con ‑g‑: mantenga."}]}, {"c": "Caso 2", "seg": ["Una paciente diabética necesita controlar su nivel de glucosa. La enfermera le recomienda que se ", "|", " el azúcar en sangre regularmente y que ", "|", " una dieta adecuada."], "h": [{"v": "medirse", "a": ["se mida", "mida"], "t": "le recomienda que…", "n": "Pronominal e irregular e→i: se mida."}, {"v": "seguir", "a": ["siga"], "t": "y que… (mismo detonante)", "n": "Irregular e→i: siga, sigas, siga…"}]}, {"c": "Caso 3", "seg": ["Un paciente hospitalizado tiene riesgo de deshidratación. La enfermera sugiere que el paciente ", "|", " líquidos con frecuencia y que ", "|", " si siente mareo o debilidad."], "h": [{"v": "beber", "a": ["beba"], "t": "sugiere que…", "n": "Sugerir + que → subjuntivo."}, {"v": "avisar", "a": ["avise"], "t": "y que… (mismo detonante)", "n": "Verbo regular en ‑ar: avise."}]}, {"c": "Caso 5", "seg": ["Un paciente anticoagulado va a ser dado de alta. La enfermera insiste en que ", "|", " si aparecen hematomas o sangrado en las encías y en que no ", "|", " antiinflamatorios sin consultar antes."], "h": [{"v": "avisar", "a": ["avise"], "t": "insiste en que…", "n": "«Insistir en que» con valor de influencia → subjuntivo."}, {"v": "tomar", "a": ["tome"], "t": "y en que no… (mismo detonante)", "n": "El subjuntivo se mantiene también en la subordinada negativa."}]}, {"c": "Caso 6", "seg": ["Una paciente encamada tras una fractura de cadera tiene riesgo de úlceras por presión. Es necesario que se le ", "|", " de postura cada dos horas y que la piel se ", "|", " limpia y seca."], "h": [{"v": "cambiar", "a": ["cambie"], "t": "Es necesario que…", "n": "Valoración impersonal + pasiva refleja: se le cambie de postura."}, {"v": "mantener", "a": ["mantenga"], "t": "y que… (mismo detonante)", "n": "Como «tener», irregular con ‑g‑: se mantenga."}]}, {"c": "Caso 7", "seg": ["Un niño de 4 años debe recibir una vacuna y llora asustado. La enfermera le pide a la madre que lo ", "|", " en brazos y le habla con calma para que se ", "|", " antes del pinchazo."], "h": [{"v": "sostener", "a": ["sostenga"], "t": "le pide a la madre que…", "n": "Como «tener»: sostenga. El sujeto es la madre."}, {"v": "tranquilizar", "a": ["tranquilice"], "t": "para que…", "n": "Finalidad → subjuntivo. Verbo en ‑zar: c ante e (se tranquilice)."}]}, {"c": "Caso 8", "seg": ["Un paciente portador de sonda vesical desarrolló una infección urinaria durante el ingreso. La enfermera hubiera preferido que se ", "|", " las medidas de higiene en cada manipulación y que la sonda se ", "|", " en cuanto dejó de ser necesaria."], "h": [{"v": "extremar", "a": ["extremaran", "extremasen", "extremara", "extremase"], "t": "hubiera preferido que… (pasado)", "n": "Imperfecto de subjuntivo. Con pasiva refleja se admite el plural («se extremaran las medidas») por concordancia con el sujeto."}, {"v": "retirar", "a": ["retirara", "retirase"], "t": "y que… (mismo detonante)", "n": "Imperfecto de subjuntivo: se retirara / se retirase (sujeto singular: la sonda)."}]}, {"c": "Caso 9", "tipo": "propio", "prompt": "Escriba su propio caso de enfermería usando al menos dos formas de subjuntivo, una en presente y otra en imperfecto. Sugerencias: cura de herida quirúrgica, administración de insulina, caídas en el anciano, oxigenoterapia, educación al cuidador.", "modelo": "Una paciente de 80 años vive sola y ha sufrido dos caídas este mes. Le recomiendo que retire las alfombras del pasillo y que use calzado cerrado dentro de casa. Es importante que su hija conozca el plan de prevención. Hubiera preferido que nos avisaran tras la primera caída."}]}];
+const norm = s => (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+  .replace(/\s+/g,' ').trim();
+
+/* ---------- Build tabs + panels ---------- */
+const tabs = document.getElementById('tabs');
+const panels = document.getElementById('panels');
+let totalBlanks = 0;
+
+B.forEach((b, bi) => {
+  const t = document.createElement('button');
+  t.className = 'tab' + (bi===0 ? ' active' : '');
+  t.dataset.p = 'p-' + b.id;
+  t.innerHTML = `<span class="lv">${b.lvl}</span> ${b.tab} <span class="dot" id="dot-${b.id}"></span>`;
+  tabs.appendChild(t);
+
+  const p = document.createElement('section');
+  p.className = 'panel' + (bi===0 ? ' active' : '');
+  p.id = 'p-' + b.id;
+
+  let h = `<div class="bhead">
+      <span class="lvl">Nivel ${b.lvl} · Clase 6</span>
+      <h2>${b.titulo}</h2>
+      <div class="bsub">${b.sub}</div>
+    </div>
+    <div class="meta">
+      <div class="meta-box"><b>Objetivo</b><p>${b.obj}</p></div>
+      <div class="meta-box i"><b>Instrucciones</b><p>${b.instr}</p></div>
+    </div>`;
+
+  let n = 0;
+  b.items.forEach((it, ii) => {
+    if (it.tipo === 'propio') {
+      h += `<div class="item propio" data-b="${b.id}">
+        <span class="caso-tag">${it.c} · su caso</span>
+        <div class="prompt">${it.prompt}</div>
+        <textarea id="ta-${b.id}" placeholder="Escriba aquí su caso clínico…"></textarea>
+        <div class="wc"><span id="wc-${b.id}">0</span> palabras</div>
+        <div class="modelo" id="mo-${b.id}"><b>Modelo de referencia</b><p>${it.modelo}</p></div>
+        <div class="actions" style="margin:12px 0 0">
+          <button class="btn amber" onclick="document.getElementById('mo-${b.id}').classList.toggle('show')">Ver modelo</button>
+          <button class="btn ghost" onclick="copyCase('${b.id}')">Copiar mi caso</button>
+        </div>
+      </div>`;
+      return;
+    }
+    n++;
+    let body = '', hi = 0;
+    it.seg.forEach(seg => {
+      if (seg === '|') {
+        const hh = it.h[hi];
+        const id = `${b.id}-${ii}-${hi}`;
+        totalBlanks++;
+        const w = Math.max(9.5, hh.a[0].length + 2.5);
+        body += `<span class="blank"><input type="text" id="in-${id}" data-a='${JSON.stringify(hh.a)}'
+                  style="width:${w}ch" autocomplete="off" spellcheck="false" aria-label="${hh.v}">
+                 <span class="vhint">(${hh.v})</span></span><span class="sol" id="sol-${id}"></span>`;
+        hi++;
+      } else { body += seg; }
+    });
+    const tag = it.c ? `<span class="caso-tag">${it.c}</span>` : '';
+    let why = '<div class="wl">Por qué se usa aquí</div>';
+    it.h.forEach(hh => {
+      why += `<div class="row"><span class="trig">${hh.t}</span><p>${hh.n}</p></div>`;
+    });
+    h += `<div class="item" id="it-${b.id}-${ii}" data-b="${b.id}">
+      <div class="item-n">${n}</div>${tag}
+      <div class="sent">${body}</div>
+      <div class="why" id="why-${b.id}-${ii}">${why}</div>
+    </div>`;
+  });
+
+  h += `<div class="actions">
+      <button class="btn primary" onclick="check('${b.id}')">Comprobar bloque</button>
+      <button class="btn amber" onclick="hints('${b.id}')">Ver explicación</button>
+      <button class="btn" onclick="solve('${b.id}')">Ver soluciones</button>
+      <button class="btn ghost" onclick="reset('${b.id}')">Reiniciar</button>
+      <span class="scorebox" id="sc-${b.id}"></span>
+    </div>`;
+
+  p.innerHTML = h;
+  panels.appendChild(p);
+});
+
+const rt = document.createElement('button');
+rt.className = 'tab ref'; rt.dataset.p = 'p-ref';
+rt.innerHTML = '▤ Guía del subjuntivo';
+tabs.appendChild(rt);
+
+document.getElementById('hTotal').textContent = totalBlanks;
+
+/* ---------- Tab switching ---------- */
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+  document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(x => x.classList.remove('active'));
+  t.classList.add('active');
+  document.getElementById(t.dataset.p).classList.add('active');
+  window.scrollTo({ top:0, behavior:'smooth' });
+}));
+
+/* ---------- Word counters ---------- */
+B.forEach(b => {
+  const ta = document.getElementById('ta-' + b.id);
+  if (ta) ta.addEventListener('input', () => {
+    const w = ta.value.trim() ? ta.value.trim().split(/\s+/).length : 0;
+    document.getElementById('wc-' + b.id).textContent = w;
+  });
+});
+function copyCase(id) {
+  const ta = document.getElementById('ta-' + id);
+  if (!ta.value.trim()) return;
+  navigator.clipboard && navigator.clipboard.writeText(ta.value);
+}
+
+/* ---------- Check / hints / solve / reset ---------- */
+function inputsOf(b) { return [...document.querySelectorAll(`#p-${b} input[data-a]`)]; }
+
+function check(b) {
+  let ok = 0, tot = 0;
+  inputsOf(b).forEach(inp => {
+    tot++;
+    const acc = JSON.parse(inp.dataset.a).map(norm);
+    const val = norm(inp.value);
+    inp.classList.remove('ok','no');
+    if (!val) return;
+    if (acc.includes(val)) { inp.classList.add('ok'); ok++; }
+    else inp.classList.add('no');
+  });
+  document.querySelectorAll(`#p-${b} .item:not(.propio)`).forEach(it => {
+    const ins = [...it.querySelectorAll('input[data-a]')];
+    it.classList.remove('ok','no');
+    if (ins.length && ins.every(i => i.classList.contains('ok'))) it.classList.add('ok');
+    else if (ins.some(i => i.classList.contains('no'))) it.classList.add('no');
+  });
+  const sc = document.getElementById('sc-' + b);
+  sc.textContent = `${ok} / ${tot} correctas`;
+  sc.classList.add('show');
+  document.getElementById('dot-' + b).classList.toggle('done', ok === tot && tot > 0);
+}
+
+function hints(b) {
+  const ws = [...document.querySelectorAll(`#p-${b} .why`)];
+  const on = ws.some(w => w.classList.contains('show'));
+  ws.forEach(w => w.classList.toggle('show', !on));
+}
+
+function solve(b) {
+  inputsOf(b).forEach(inp => {
+    const acc = JSON.parse(inp.dataset.a);
+    inp.value = acc[0];
+    inp.classList.remove('no'); inp.classList.add('ok');
+    if (acc.length > 1) {
+      const sol = document.getElementById('sol-' + inp.id.slice(3));
+      if (sol) { sol.textContent = ' / ' + acc.slice(1).join(' / '); sol.classList.add('show'); }
+    }
+  });
+  document.querySelectorAll(`#p-${b} .why`).forEach(w => w.classList.add('show'));
+  document.querySelectorAll(`#p-${b} .item:not(.propio)`).forEach(i => { i.classList.remove('no'); i.classList.add('ok'); });
+}
+
+function reset(b) {
+  inputsOf(b).forEach(inp => { inp.value = ''; inp.classList.remove('ok','no'); });
+  document.querySelectorAll(`#p-${b} .sol`).forEach(s => s.classList.remove('show'));
+  document.querySelectorAll(`#p-${b} .why`).forEach(w => w.classList.remove('show'));
+  document.querySelectorAll(`#p-${b} .item`).forEach(i => i.classList.remove('ok','no'));
+  document.getElementById('sc-' + b).classList.remove('show');
+  document.getElementById('dot-' + b).classList.remove('done');
+}
+
+/* Enter = next blank */
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Enter' || e.target.tagName !== 'INPUT') return;
+  const all = [...document.querySelectorAll('.panel.active input[data-a]')];
+  const i = all.indexOf(e.target);
+  if (i > -1 && i < all.length - 1) all[i+1].focus();
+  e.preventDefault();
+});
+</script>
+</body>
+</html>
